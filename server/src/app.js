@@ -15,7 +15,12 @@ app.use(express.urlencoded())
 app.use(express.static("public"))
 app.use(cookieParser())
 
+import userRouter from "./routes/ApplyedJob.route.js"
+import companyRouter from "./routes/company.route.js"
 import errorHandler from "./middlewares/error.middleware.js";
+
+app.use("/api/v1/users", userRouter)
+app.use("/api/v1/companies", companyRouter)
 
 app.use(errorHandler)
 

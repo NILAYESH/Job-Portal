@@ -168,7 +168,7 @@ const updateCompanyDetails = asyncHandler(async (req, res) => {
         website,
         industry,
         size
-    }, { new: true, runValidators: true }).select("-password -refreshToken");
+    }, { returnDocument: 'after', runValidators: true }).select("-password -refreshToken");
 
     if (!company) {
         throw new ApiError(404, "Company not found");

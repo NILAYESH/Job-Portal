@@ -157,7 +157,7 @@ const updateDetails = asyncHandler(async (req, res) => {
         category,
         languages,
         achievements
-    }, { new: true, runValidators: true }).select("-password -refreshToken");
+    }, { returnDocument: 'after', runValidators: true }).select("-password -refreshToken");
 
     if(!updatedUser) {
         throw new ApiError(500, "User not found");
@@ -187,10 +187,10 @@ const updateAddress = asyncHandler(async (req, res) => {
             street,
             city,
             state,
-            zipCode,
+            zip : zipCode,
             country
         }
-    }, { new: true, runValidators: true }).select("-password -refreshToken");
+    }, { returnDocument: 'after', runValidators: true }).select("-password -refreshToken");
 
     if(!updatedUser) {
         throw new ApiError(500, "Failed to update user address");
@@ -226,7 +226,7 @@ const updateQualifications = asyncHandler(async (req, res) => {
                 }
             }
         },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if(!updatedUser) {
@@ -264,7 +264,7 @@ const updateExperience = asyncHandler(async (req, res) => {
                 }
             }
         },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if(!updatedUser) {
@@ -293,7 +293,7 @@ const updateSkills = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         { skills },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if(!updatedUser) {
@@ -330,7 +330,7 @@ const updateProjects = asyncHandler(async (req, res) => {
                 }
             }
         },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if(!updatedUser) {
@@ -385,7 +385,7 @@ const uploadAndUpdateProfilePicture = asyncHandler(async (req, res) => {
                 fileId
             }
         },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if (!updatedUser) {
@@ -418,7 +418,7 @@ const deleteProfilePicture = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         { profilePicture: null },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
     if (!updatedUser) {
         throw new ApiError(500, "Failed to delete user profile picture");
@@ -468,7 +468,7 @@ const uploadAndUpdateResume = asyncHandler(async (req, res) => {
                 fileId
             }
         },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
 
     if (!updatedUser) {
@@ -501,7 +501,7 @@ const deleteResume = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         { resume: null },
-        { new: true, runValidators: true }
+        { returnDocument: 'after', runValidators: true }
     ).select("-password -refreshToken");
     if (!updatedUser) {
         throw new ApiError(500, "Failed to delete user resume");
@@ -511,6 +511,101 @@ const deleteResume = asyncHandler(async (req, res) => {
         .status(200)
         .json(
             new ApiResponse(200, updatedUser, "User resume deleted successfully")
+        )
+})
+
+const isprofileCompleteInPercentage = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    if (!userId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const user = await User.findById(userId).select("-password -refreshToken");
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    let totalPoints = 100;
+    let earnedPoints = 0;
+
+    // 1. Basic Info (name + email)
+    if (user.name && user.email) {
+        earnedPoints += 15;
+    }
+
+    // 2. Profile Picture
+    if (user.profilePicture?.url) {
+        earnedPoints += 5;
+    }
+
+    // 3. Address
+    if (
+        user.address &&
+        user.address.street &&
+        user.address.city &&
+        user.address.state &&
+        user.address.zip &&
+        user.address.country
+    ) {
+        earnedPoints += 10;
+    }
+
+    // 4. DOB
+    if (user.DOB) {
+        earnedPoints += 5;
+    }
+
+    // 5. Summary
+    if (user.summary && user.summary.trim().length > 0) {
+        earnedPoints += 10;
+    }
+
+    // 6. Skills
+    if (user.skills && user.skills.length > 0) {
+        earnedPoints += 10;
+    }
+
+    // 7. Qualifications
+    if (user.qualifications && user.qualifications.length > 0) {
+        earnedPoints += 10;
+    }
+
+    // 8. Experience
+    if (user.experiences && user.experiences.length > 0) {
+        earnedPoints += 10;
+    }
+
+    // 9. Projects
+    if (user.projects && user.projects.length > 0) {
+        earnedPoints += 10;
+    }
+
+    // 10. Resume
+    if (user.resume?.url) {
+        earnedPoints += 5;
+    }
+
+    // 11. Languages
+    if (user.languages && user.languages.length > 0) {
+        earnedPoints += 5;
+    }
+
+    // 12. Achievements
+    if (user.achievements && user.achievements.length > 0) {
+        earnedPoints += 5;
+    }
+
+    // 13. Category
+    if (user.category) {
+        earnedPoints += 5;
+    }
+
+    const profileCompletePercentage = Math.round((earnedPoints / totalPoints) * 100);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, { profileCompletePercentage }, "User profile completeness percentage fetched successfully")
         )
 })
 
@@ -528,5 +623,6 @@ export {
     uploadAndUpdateProfilePicture,
     deleteProfilePicture,
     uploadAndUpdateResume,
-    deleteResume
+    deleteResume,
+    isprofileCompleteInPercentage
 }

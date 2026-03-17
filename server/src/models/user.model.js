@@ -122,11 +122,11 @@ const userSchema = new Schema({
     },
     address: {
         type: addressSchema,
-        required: true
+        required: false
     },
     DOB : {
         type: Date,
-        required: true
+        required: false
     },
     qualifications: [qualificationSchema],
     experiences: [experienceSchema],
@@ -149,7 +149,7 @@ const userSchema = new Schema({
     category: {
         type: String,
         enum: ['Fresher', 'Experienced'],
-        required: true
+        required: false
     },
     languages: [String],
     achievements: [String]

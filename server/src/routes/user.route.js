@@ -13,7 +13,8 @@ import {
     uploadAndUpdateProfilePicture,
     deleteProfilePicture,
     uploadAndUpdateResume,
-    deleteResume
+    deleteResume,
+    isprofileCompleteInPercentage
 } from "../controllers/user.controller.js";
 import { verifyUser } from "../middlewares/oauth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -34,5 +35,6 @@ router.route("/upload-profile-picture").post(verifyUser, upload.single("profileP
 router.route("/delete-profile-picture").delete(verifyUser, deleteProfilePicture);
 router.route("/upload-resume").post(verifyUser, upload.single("resume"), uploadAndUpdateResume);
 router.route("/delete-resume").delete(verifyUser, deleteResume);
+router.route("/profile-completion").get(verifyUser, isprofileCompleteInPercentage);
 
 export default router;

@@ -168,7 +168,7 @@ const updateCompanyDetails = asyncHandler(async (req, res) => {
         website,
         industry,
         size
-    }, { new: true, runValidators: true }).select("-password -refreshToken");
+    }, { returnDocument: 'after', runValidators: true }).select("-password -refreshToken");
 
     if (!company) {
         throw new ApiError(404, "Company not found");
@@ -181,10 +181,86 @@ const updateCompanyDetails = asyncHandler(async (req, res) => {
         )
 })
 
+const uploadCompanyLogo = asyncHandler(async (req, res) => {
+    const companyId = req.company._id;
+
+    if (!companyId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    if (!req.file) {
+        throw new ApiError(400, "No file uploaded");
+    }
+
+    const { buffer, mimetype, originalname, size } = req.file;
+    if (!buffer || !mimetype || !originalname || !size) {
+        throw new ApiError(400, "Invalid file upload");
+    }
+
+    const company = await Company.findById(companyId);
+    if (!company) {
+        throw new ApiError(404, "Company not found");
+    }
+
+    if (company.logo && company.logo.fileId) {
+        await deleteFromImageKit(company.logo.fileId);
+    }
+
+    const fileName = originalname || `logo_${companyId}_${Date.now()}`;
+    const uploadResult = await uploadToImageKit(buffer, fileName);
+    if (!uploadResult || !uploadResult.url || !uploadResult.fileId) {
+        throw new ApiError(500, "Failed to upload logo");
+    }
+
+    company.logo = {
+        url: uploadResult.url,
+        fileId: uploadResult.fileId
+    }
+    await company.save({ validateBeforeSave: false });
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, {
+                logoUrl: uploadResult.url
+            }, "Company logo uploaded successfully")
+        )
+})
+
+const deleteCompanyLogo = asyncHandler(async (req, res) => {
+    const companyId = req.company._id;
+
+    if (!companyId) {
+        throw new ApiError(401, "Unauthorized");
+    }
+
+    const company = await Company.findById(companyId);
+    if (!company) {
+        throw new ApiError(404, "Company not found");
+    }
+
+    if (!company.logo || !company.logo.fileId) {
+        throw new ApiError(400, "No logo to delete");
+    }
+
+    await deleteFromImageKit(company.logo.fileId);
+
+    company.logo = null;
+    await company.save({ validateBeforeSave: false });
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(200, null, "Company logo deleted successfully")
+        )
+})
+
 export {
     registerCompany,
     loginCompany,
     logoutCompany,
     currentCompany,
-    updateCompanyDetails
+    updateCompanyDetails,
+    uploadCompanyLogo,
+    deleteCompanyLogo
 }

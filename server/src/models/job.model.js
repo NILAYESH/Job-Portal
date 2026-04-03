@@ -9,7 +9,11 @@ const qualificationSchema = new Schema({
 });
 
 const experienceSchema = new Schema({
-    years: {
+    min: {
+        type: Number,
+        required: true
+    },
+    max: {
         type: Number,
         required: true
     }
@@ -40,7 +44,8 @@ const jobSchema = new Schema({
         trim: true
     },
     jobType: {
-        type: ["Full-time", "Part-time", "Contract", "Internship"],
+        type: String,
+        enum: ["Full-time", "Part-time", "Contract", "Internship"],
         required: true,
         trim: true
     },
@@ -51,7 +56,8 @@ const jobSchema = new Schema({
         required: true
     },
     workMode: {
-        type: ["On-site", "Remote", "Hybrid"],
+        type: String,
+        enum: ["On-site", "Remote", "Hybrid"],
         required: true,
         trim: true
     },

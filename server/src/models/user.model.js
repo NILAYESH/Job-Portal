@@ -102,6 +102,11 @@ const userSchema = new Schema({
         trim: true,
         lowercase: true
     },
+    phoneNumber: {
+        type: String,
+        required: false,
+        trim: true
+    },
     password: {
         type: String,
         required: true
@@ -126,6 +131,11 @@ const userSchema = new Schema({
     },
     DOB : {
         type: Date,
+        required: false
+    },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female', 'Other'],
         required: false
     },
     qualifications: [qualificationSchema],

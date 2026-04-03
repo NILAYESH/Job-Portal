@@ -41,9 +41,9 @@ const accessAndRefreshTokenGenrator = async (userId) => {
 }
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-        throw new ApiError(400, "Name, email and password are required");
+    const { name, email, DOB, gender, password } = req.body;
+    if (!name || !email || !DOB || !gender || !password) {
+        throw new ApiError(400, "All fields are required");
     }
 
     const existingUser = await User.findOne({ email });
@@ -56,6 +56,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name,
         email,
+        DOB,
+        gender,
         password: hashedPassword
     })
 
@@ -138,21 +140,27 @@ const currentUser = asyncHandler(async (req, res) => {
 
 const updateDetails = asyncHandler(async (req, res) => {
     const userId = req.user._id;
-    const {name, DOB, summary, category, languages, achievements} = req.body;
+    const {name,phoneNumber, DOB, gender, summary, category, languages, achievements} = req.body;
 
     if (!userId) {
         throw new ApiError(401, "Unauthorized");
     }
-    if(!name || !DOB || !summary || !languages.length || !achievements.length) {
+    if(!name || !phoneNumber || !DOB || !summary || !languages.length || !achievements.length) {
         throw new ApiError(400, "All fields are required");
     }
     if(!['Fresher', 'Experienced'].includes(category)) {
         throw new ApiError(400, "Invalid category");
     }
+    if(gender && !['Male', 'Female', 'Other'].includes(gender)) {
+        throw new ApiError(400, "Invalid gender");
+    }
+
 
     const updatedUser = await User.findByIdAndUpdate(userId, {
         name,
+        phoneNumber,
         DOB,
+        gender,
         summary,
         category,
         languages,

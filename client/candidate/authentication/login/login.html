@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Setup Flow</title>
-<link rel="stylesheet" href="login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Setup Flow</title>
+  <link rel="stylesheet" href="login.css">
+  <script src="login.js" type="module" defer></script>
 </head>
+
 <body>
 
   <div id="page1" class="step active">
@@ -18,7 +21,7 @@
         <h1>Sign in</h1>
         <p class="subtitle">to continue to your account</p>
       </div>
-      
+
       <div class="right-panel">
         <div class="form-group">
           <input type="email" placeholder="Email" required>
@@ -26,7 +29,7 @@
         <div class="form-group">
           <input type="password" placeholder="Password" required>
         </div>
-        
+
         <div class="actions">
           <div class="links-group">
             <button class="btn-link" type="button">Forgot password?</button>
@@ -48,7 +51,7 @@
         <h1>Create Account</h1>
         <p class="subtitle">Enter your details to get started</p>
       </div>
-      
+
       <div class="right-panel">
         <div class="form-group">
           <input type="text" placeholder="Name" required>
@@ -56,7 +59,7 @@
         <div class="form-group">
           <input type="email" placeholder="Email" required>
         </div>
-        
+
         <div class="actions">
           <button class="btn-ghost" type="button" onclick="navigate('page2', 'page1')">Back</button>
           <button class="btn-primary" type="button" onclick="navigate('page2', 'page3')">Next</button>
@@ -75,7 +78,7 @@
         <h1>Basic Information</h1>
         <p class="subtitle">Tell us a bit more about yourself</p>
       </div>
-      
+
       <div class="right-panel">
         <div class="form-row">
           <div class="form-group">
@@ -83,33 +86,32 @@
               <option value="" disabled selected>Month</option>
               <option value="1">Jan</option>
               <option value="2">Feb</option>
-              </select>
+            </select>
           </div>
           <div class="form-group">
             <select aria-label="Day">
               <option value="" disabled selected>Day</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              </select>
+            </select>
           </div>
           <div class="form-group">
             <select aria-label="Year">
               <option value="" disabled selected>Year</option>
               <option value="2024">2024</option>
               <option value="2023">2023</option>
-              </select>
+            </select>
           </div>
         </div>
         <div class="form-group">
           <select aria-label="Gender">
             <option value="" disabled selected>Gender</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="custom">Custom</option>
-            <option value="none">Prefer not to say</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Other">Other</option>
           </select>
         </div>
-        
+
         <div class="actions">
           <button class="btn-ghost" type="button" onclick="navigate('page3', 'page2')">Back</button>
           <button class="btn-primary" type="button" onclick="navigate('page3', 'page4')">Next</button>
@@ -128,7 +130,7 @@
         <h1>Create Your Password</h1>
         <p class="subtitle">Secure your new account</p>
       </div>
-      
+
       <div class="right-panel">
         <div class="form-group">
           <input type="password" id="new-password" placeholder="Password" required>
@@ -140,18 +142,15 @@
           <input type="checkbox" onchange="togglePasswordVisibility(this)">
           Show password
         </label>
-        
+
         <div class="actions">
-           <button class="btn-ghost" type="button" onclick="navigate('page4', 'page3')">Back</button>
-          <button class="btn-primary" type="button">Next</button>
+          <button class="btn-ghost" type="button" onclick="navigate('page4', 'page3')">Back</button>
+          <button class="btn-primary" type="button" onclick="navigate('page4', 'page1')">Next</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="login.js">
-    // Handle Page Navigation
-    
-  </script>
 </body>
+
 </html>

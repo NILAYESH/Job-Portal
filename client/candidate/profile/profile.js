@@ -15,9 +15,12 @@
     var notificationsCloseButtons = notificationsOverlay ? Array.from(notificationsOverlay.querySelectorAll("[data-notifications-close]")) : [];
     var quickNavLinks = Array.from(document.querySelectorAll(".quick-nav-link"));
     var quickScrollLinks = Array.from(document.querySelectorAll(".quick-card a[href^='#']"));
+    var summaryModalTrigger = document.getElementById("summaryModalTrigger");
     var personalDetailsModalTrigger = document.getElementById("personalDetailsModalTrigger");
     var addressModalTrigger = document.getElementById("addressModalTrigger");
+    var languagesModalTrigger = document.getElementById("languagesModalTrigger");
     var educationModalTrigger = document.querySelector("#education .text-link");
+    var achievementsModalTrigger = document.getElementById("achievementsModalTrigger");
     var skillsModalTrigger = document.getElementById("skills");
     var experienceModalTrigger = document.getElementById("experience");
     var projectsModalTrigger = document.getElementById("projects");
@@ -88,25 +91,52 @@
     var profileSkillsList = document.getElementById("profileSkillsList");
     var skillsInput = document.getElementById("skillsInput");
     var skillsPlaceholder = document.getElementById("skillsPlaceholder");
+    var languagesModalOverlay = document.getElementById("languagesModalOverlay");
+    var languagesModal = languagesModalOverlay ? languagesModalOverlay.querySelector(".languages-modal") : null;
+    var languagesCloseButtons = languagesModalOverlay ? Array.from(languagesModalOverlay.querySelectorAll("[data-languages-close]")) : [];
+    var languagesModalForm = document.getElementById("languagesModalForm");
+    var languagesChipList = document.getElementById("languagesChipList");
+    var languagesList = document.getElementById("languagesList");
+    var languagesInput = document.getElementById("languagesInput");
+    var summaryModalOverlay = document.getElementById("summaryModalOverlay");
+    var summaryModal = summaryModalOverlay ? summaryModalOverlay.querySelector(".summary-modal") : null;
+    var summaryCloseButtons = summaryModalOverlay ? Array.from(summaryModalOverlay.querySelectorAll("[data-summary-close]")) : [];
+    var summaryModalForm = document.getElementById("summaryModalForm");
+    var summaryInput = document.getElementById("summaryInput");
+    var profileSummaryText = document.getElementById("profileSummaryText");
+    var achievementsModalOverlay = document.getElementById("achievementsModalOverlay");
+    var achievementsModal = achievementsModalOverlay ? achievementsModalOverlay.querySelector(".achievements-modal") : null;
+    var achievementsCloseButtons = achievementsModalOverlay ? Array.from(achievementsModalOverlay.querySelectorAll("[data-achievements-close]")) : [];
+    var achievementsModalForm = document.getElementById("achievementsModalForm");
+    var achievementsInput = document.getElementById("achievementsInput");
+    var achievementsChipList = document.getElementById("achievementsChipList");
+    var academicAchievementsList = document.getElementById("academicAchievementsList");
     var uploadResumeBtn = document.getElementById("uploadResumeBtn");
     var resumeInput = document.getElementById("resumeInput");
     var resumeDisplay = document.getElementById("resumeDisplay");
     var resumeUploadState = document.getElementById("resumeUploadState");
     var fullNameInput = document.getElementById("fullNameInput");
     var dobInput = document.getElementById("dobInput") || document.getElementById("birthDate");
-    var currentLocationInput = document.getElementById("currentLocationInput");
-    var hometownInput = document.getElementById("hometownInput");
+    var streetInput = document.getElementById("streetInput");
+    var cityInput = document.getElementById("cityInput");
+    var stateInput = document.getElementById("StateInput");
+    var countryInput = document.getElementById("CountryInput");
+    var pinCodeInput = document.getElementById("pinCodeInput");
     var mobileInput = document.getElementById("mobileInput");
     var residingInIndiaInput = document.getElementById("residingInIndia");
     var profileNameHeading = document.getElementById("profileName");
     var profileFullNameValue = document.getElementById("profileFullNameValue");
     var profileGenderSummary = document.getElementById("profileGenderSummary");
     var profileGenderValue = document.getElementById("profileGenderValue");
+    var profileCategoryValue = document.getElementById("profileCategoryValue");
     var profileDobSummary = document.getElementById("profileDobSummary");
     var profileDobValue = document.getElementById("profileDobValue");
     var profileCurrentLocationSummary = document.getElementById("profileCurrentLocationSummary");
-    var profileCurrentLocationValue = document.getElementById("profileCurrentLocationValue");
-    var profileHometownValue = document.getElementById("profileHometownValue");
+    var profileStreetValue = document.getElementById("profileStreetValue");
+    var profileCityValue = document.getElementById("profileCityValue");
+    var profileStateValue = document.getElementById("profileStateValue");
+    var profileCountryValue = document.getElementById("profileCountryValue");
+    var profilePinCodeValue = document.getElementById("profilePinCodeValue");
     var profilePhoneSummary = document.getElementById("profilePhoneSummary");
     var profilePhoneValue = document.getElementById("profilePhoneValue");
     var progressRing = document.querySelector(".progress-ring");
@@ -134,6 +164,9 @@
     var lastProjectsModalFocusedElement = null;
     var lastPhotoModalFocusedElement = null;
     var lastSkillsModalFocusedElement = null;
+    var lastLanguagesModalFocusedElement = null;
+    var lastSummaryModalFocusedElement = null;
+    var lastAchievementsModalFocusedElement = null;
     var lastProfileDrawerFocusedElement = null;
     var lastNotificationsFocusedElement = null;
     var focusableSelector = [
@@ -147,9 +180,13 @@
     var profileState = {
         fullName: fullNameInput ? fullNameInput.value.trim() : "",
         gender: getCheckedRadioValue("gender"),
+        category: getCheckedRadioValue("category"),
         dateOfBirth: dobInput ? dobInput.value.trim() : "",
-        currentLocation: currentLocationInput ? currentLocationInput.value.trim() : "",
-        hometown: hometownInput ? hometownInput.value.trim() : "",
+        street: streetInput ? streetInput.value.trim() : "",
+        city: cityInput ? cityInput.value.trim() : "",
+        state: stateInput ? stateInput.value.trim() : "",
+        country: countryInput ? countryInput.value.trim() : "",
+        pinCode: pinCodeInput ? pinCodeInput.value.trim() : "",
         mobileNumber: mobileInput ? mobileInput.value.trim() : "",
         residingInIndia: residingInIndiaInput ? residingInIndiaInput.checked : true
     };
@@ -181,6 +218,13 @@
         "Java Programming"
     ];
     var skillsDraftState = skillsState.slice();
+    var languagesState = [];
+    var languagesDraftState = languagesState.slice();
+    var summaryState = profileSummaryText ? profileSummaryText.textContent.trim() : "";
+    var achievementsState = [
+        "my greare achivment is own 4th in entire university"
+    ];
+    var achievementsDraftState = achievementsState.slice();
     var resumeStorageKey = "user_resume";
     var profilePhotoStorageKey = "user_profile_photo";
 
@@ -213,6 +257,18 @@
         return Boolean(skillsModalOverlay && !skillsModalOverlay.hidden);
     }
 
+    function isLanguagesModalOpen() {
+        return Boolean(languagesModalOverlay && !languagesModalOverlay.hidden);
+    }
+
+    function isSummaryModalOpen() {
+        return Boolean(summaryModalOverlay && !summaryModalOverlay.hidden);
+    }
+
+    function isAchievementsModalOpen() {
+        return Boolean(achievementsModalOverlay && !achievementsModalOverlay.hidden);
+    }
+
     function isProfileDrawerOpen() {
         return Boolean(profileDrawerOverlay && !profileDrawerOverlay.hidden && profileDrawerOverlay.classList.contains("open"));
     }
@@ -222,7 +278,7 @@
     }
 
     function syncBodyScrollLock() {
-        body.classList.toggle("modal-open", isProfileModalOpen() || isEducationModalOpen() || isExperienceModalOpen() || isProjectsModalOpen() || isPhotoModalOpen() || isSkillsModalOpen() || isProfileDrawerOpen() || isNotificationsOpen());
+        body.classList.toggle("modal-open", isProfileModalOpen() || isEducationModalOpen() || isExperienceModalOpen() || isProjectsModalOpen() || isPhotoModalOpen() || isSkillsModalOpen() || isLanguagesModalOpen() || isSummaryModalOpen() || isAchievementsModalOpen() || isProfileDrawerOpen() || isNotificationsOpen());
     }
 
     function setCheckedRadioValue(name, value) {
@@ -268,6 +324,8 @@
         var viewEditPanel = document.getElementById("panel-view-edit");
         var activeSectionId = "";
         var marker = window.scrollY + getStickyOffset() + 24;
+        var projectsSection = document.getElementById("projects-section");
+        var projectsResumeHandoffPoint = projectsSection ? projectsSection.offsetTop + (projectsSection.offsetHeight * 0.75) : 0;
 
         if (!viewEditPanel || !viewEditPanel.classList.contains("active")) {
             clearActiveQuickLinks();
@@ -282,6 +340,10 @@
 
         if (!activeSectionId && quickSections.length) {
             activeSectionId = quickSections[0].id;
+        }
+
+        if (activeSectionId === "projects-section" && projectsSection && marker >= projectsResumeHandoffPoint) {
+            activeSectionId = "resume";
         }
 
         if (activeSectionId) {
@@ -361,20 +423,32 @@
     }
 
     function syncFormFromState() {
+        if (streetInput) {
+            streetInput.value = profileState.street;
+        }
+
+        if (cityInput) {
+            cityInput.value = profileState.city;
+        }
+
+        if (stateInput) {
+            stateInput.value = profileState.state;
+        }
+
+        if (countryInput) {
+            countryInput.value = profileState.country;
+        }
+
+        if (pinCodeInput) {
+            pinCodeInput.value = profileState.pinCode;
+        }
+
         if (fullNameInput) {
             fullNameInput.value = profileState.fullName;
         }
 
         if (dobInput) {
             dobInput.value = profileState.dateOfBirth;
-        }
-
-        if (currentLocationInput) {
-            currentLocationInput.value = profileState.currentLocation;
-        }
-
-        if (hometownInput) {
-            hometownInput.value = profileState.hometown;
         }
 
         if (mobileInput) {
@@ -386,9 +460,12 @@
         }
 
         setCheckedRadioValue("gender", profileState.gender);
+        setCheckedRadioValue("category", profileState.category);
     }
 
     function applyProfileState() {
+        var addressSummary = [profileState.city, profileState.state].filter(Boolean).join(", ");
+
         if (profileNameHeading) {
             profileNameHeading.textContent = profileState.fullName || "Not added";
         }
@@ -396,11 +473,15 @@
         setDisplayValue(profileFullNameValue, profileState.fullName, "Not added", false);
         setDisplayValue(profileGenderSummary, profileState.gender, "Add Gender", true);
         setDisplayValue(profileGenderValue, profileState.gender, "Not added", false);
+        setDisplayValue(profileCategoryValue, profileState.category, "Not added", false);
         setDisplayValue(profileDobSummary, profileState.dateOfBirth, "Add birthday", true);
         setDisplayValue(profileDobValue, profileState.dateOfBirth, "Not added", false);
-        setDisplayValue(profileCurrentLocationSummary, profileState.currentLocation, "Not added", false);
-        setDisplayValue(profileCurrentLocationValue, profileState.currentLocation, "Not added", false);
-        setDisplayValue(profileHometownValue, profileState.hometown, "Not added", false);
+        setDisplayValue(profileCurrentLocationSummary, addressSummary, "Not added", false);
+        setDisplayValue(profileStreetValue, profileState.street, "Not added", false);
+        setDisplayValue(profileCityValue, profileState.city, "Not added", false);
+        setDisplayValue(profileStateValue, profileState.state, "Not added", false);
+        setDisplayValue(profileCountryValue, profileState.country, "Not added", false);
+        setDisplayValue(profilePinCodeValue, profileState.pinCode, "Not added", false);
         setDisplayValue(profilePhoneValue, profileState.mobileNumber, "Not added", false);
 
         if (profilePhoneSummary) {
@@ -972,6 +1053,263 @@
         return true;
     }
 
+    function normalizeLanguage(value) {
+        return (value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function renderProfileSummary() {
+        if (!profileSummaryText) {
+            return;
+        }
+
+        setDisplayValue(profileSummaryText, summaryState, "Add a short professional summary", false);
+    }
+
+    function openSummaryModal() {
+        if (!summaryModalOverlay) {
+            return;
+        }
+
+        lastSummaryModalFocusedElement = document.activeElement;
+
+        if (summaryInput) {
+            summaryInput.value = summaryState;
+        }
+
+        summaryModalOverlay.hidden = false;
+        syncBodyScrollLock();
+
+        window.requestAnimationFrame(function () {
+            if (summaryInput) {
+                summaryInput.focus();
+                summaryInput.setSelectionRange(summaryInput.value.length, summaryInput.value.length);
+            }
+        });
+    }
+
+    function closeSummaryModal() {
+        if (!summaryModalOverlay || summaryModalOverlay.hidden) {
+            return;
+        }
+
+        summaryModalOverlay.hidden = true;
+        syncBodyScrollLock();
+
+        if (lastSummaryModalFocusedElement && typeof lastSummaryModalFocusedElement.focus === "function") {
+            lastSummaryModalFocusedElement.focus();
+        }
+    }
+
+    function normalizeAchievement(value) {
+        return (value || "").replace(/\s+/g, " ").trim();
+    }
+
+    function renderProfileAchievements() {
+        if (!academicAchievementsList) {
+            return;
+        }
+
+        academicAchievementsList.innerHTML = "";
+
+        if (!achievementsState.length) {
+            academicAchievementsList.innerHTML = "<span class=\"empty-value\">No academic achievements added</span>";
+            return;
+        }
+
+        achievementsState.forEach(function (achievement) {
+            var item = document.createElement("div");
+
+            item.className = "achievement-item";
+            item.textContent = achievement;
+            academicAchievementsList.appendChild(item);
+        });
+    }
+
+    function renderAchievementsDraft() {
+        if (!achievementsChipList) {
+            return;
+        }
+
+        achievementsChipList.innerHTML = "";
+
+        achievementsDraftState.forEach(function (achievement, index) {
+            var chip = document.createElement("div");
+            var label = document.createElement("span");
+            var removeButton = document.createElement("button");
+
+            chip.className = "tag-chip";
+            label.textContent = achievement;
+
+            removeButton.className = "tag-chip-remove";
+            removeButton.type = "button";
+            removeButton.setAttribute("aria-label", "Remove " + achievement);
+            removeButton.setAttribute("data-achievement-index", String(index));
+            removeButton.innerHTML = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6 18 18\"></path><path d=\"M18 6 6 18\"></path></svg>";
+
+            chip.appendChild(label);
+            chip.appendChild(removeButton);
+            achievementsChipList.appendChild(chip);
+        });
+    }
+
+    function addAchievementToDraft(value) {
+        var normalizedValue = normalizeAchievement(value);
+        var alreadyExists = achievementsDraftState.some(function (achievement) {
+            return achievement.toLowerCase() === normalizedValue.toLowerCase();
+        });
+
+        if (!normalizedValue || alreadyExists) {
+            return false;
+        }
+
+        achievementsDraftState.push(normalizedValue);
+        renderAchievementsDraft();
+        return true;
+    }
+
+    function openAchievementsModal() {
+        if (!achievementsModalOverlay) {
+            return;
+        }
+
+        lastAchievementsModalFocusedElement = document.activeElement;
+        achievementsDraftState = achievementsState.slice();
+
+        if (achievementsInput) {
+            achievementsInput.value = "";
+        }
+
+        renderAchievementsDraft();
+        achievementsModalOverlay.hidden = false;
+        syncBodyScrollLock();
+
+        window.requestAnimationFrame(function () {
+            if (achievementsInput) {
+                achievementsInput.focus();
+            }
+        });
+    }
+
+    function closeAchievementsModal() {
+        if (!achievementsModalOverlay || achievementsModalOverlay.hidden) {
+            return;
+        }
+
+        if (achievementsInput) {
+            achievementsInput.value = "";
+        }
+
+        achievementsModalOverlay.hidden = true;
+        syncBodyScrollLock();
+
+        if (lastAchievementsModalFocusedElement && typeof lastAchievementsModalFocusedElement.focus === "function") {
+            lastAchievementsModalFocusedElement.focus();
+        }
+    }
+
+    function renderProfileLanguages() {
+        if (!languagesList) {
+            return;
+        }
+
+        languagesList.innerHTML = "";
+
+        if (!languagesState.length) {
+            languagesList.innerHTML = "<span class=\"empty-value\">No languages added</span>";
+            return;
+        }
+
+        languagesState.forEach(function (language) {
+            var pill = document.createElement("span");
+
+            pill.className = "language-pill";
+            pill.textContent = language;
+            languagesList.appendChild(pill);
+        });
+    }
+
+    function renderLanguagesDraft() {
+        if (!languagesChipList) {
+            return;
+        }
+
+        languagesChipList.innerHTML = "";
+
+        languagesDraftState.forEach(function (language, index) {
+            var chip = document.createElement("div");
+            var label = document.createElement("span");
+            var removeButton = document.createElement("button");
+
+            chip.className = "tag-chip";
+            label.textContent = language;
+
+            removeButton.className = "tag-chip-remove";
+            removeButton.type = "button";
+            removeButton.setAttribute("aria-label", "Remove " + language);
+            removeButton.setAttribute("data-language-index", String(index));
+            removeButton.innerHTML = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6 18 18\"></path><path d=\"M18 6 6 18\"></path></svg>";
+
+            chip.appendChild(label);
+            chip.appendChild(removeButton);
+            languagesChipList.appendChild(chip);
+        });
+    }
+
+    function addLanguageToDraft(value) {
+        var normalizedValue = normalizeLanguage(value);
+        var alreadyExists = languagesDraftState.some(function (language) {
+            return language.toLowerCase() === normalizedValue.toLowerCase();
+        });
+
+        if (!normalizedValue || alreadyExists) {
+            return false;
+        }
+
+        languagesDraftState.push(normalizedValue);
+        renderLanguagesDraft();
+        return true;
+    }
+
+    function openLanguagesModal() {
+        if (!languagesModalOverlay) {
+            return;
+        }
+
+        lastLanguagesModalFocusedElement = document.activeElement;
+        languagesDraftState = languagesState.slice();
+
+        if (languagesInput) {
+            languagesInput.value = "";
+        }
+
+        renderLanguagesDraft();
+        languagesModalOverlay.hidden = false;
+        syncBodyScrollLock();
+
+        window.requestAnimationFrame(function () {
+            if (languagesInput) {
+                languagesInput.focus();
+            }
+        });
+    }
+
+    function closeLanguagesModal() {
+        if (!languagesModalOverlay || languagesModalOverlay.hidden) {
+            return;
+        }
+
+        if (languagesInput) {
+            languagesInput.value = "";
+        }
+
+        languagesModalOverlay.hidden = true;
+        syncBodyScrollLock();
+
+        if (lastLanguagesModalFocusedElement && typeof lastLanguagesModalFocusedElement.focus === "function") {
+            lastLanguagesModalFocusedElement.focus();
+        }
+    }
+
     function openSkillsModal() {
         if (!skillsModalOverlay) {
             return;
@@ -1201,6 +1539,24 @@
                 return;
             }
 
+            if (isAchievementsModalOpen()) {
+                event.preventDefault();
+                closeAchievementsModal();
+                return;
+            }
+
+            if (isLanguagesModalOpen()) {
+                event.preventDefault();
+                closeLanguagesModal();
+                return;
+            }
+
+            if (isSummaryModalOpen()) {
+                event.preventDefault();
+                closeSummaryModal();
+                return;
+            }
+
             if (isProfileDrawerOpen()) {
                 event.preventDefault();
                 closeProfileDrawer();
@@ -1257,6 +1613,21 @@
 
         if (isSkillsModalOpen()) {
             trapFocus(event, skillsModalOverlay);
+            return;
+        }
+
+        if (isAchievementsModalOpen()) {
+            trapFocus(event, achievementsModalOverlay);
+            return;
+        }
+
+        if (isLanguagesModalOpen()) {
+            trapFocus(event, languagesModalOverlay);
+            return;
+        }
+
+        if (isSummaryModalOpen()) {
+            trapFocus(event, summaryModalOverlay);
             return;
         }
 
@@ -1336,6 +1707,13 @@
         });
     }
 
+    if (summaryModalTrigger) {
+        summaryModalTrigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            openSummaryModal();
+        });
+    }
+
     if (addressModalTrigger) {
         addressModalTrigger.addEventListener("click", function (event) {
             event.preventDefault();
@@ -1400,6 +1778,20 @@
         });
     }
 
+    if (languagesModalTrigger) {
+        languagesModalTrigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            openLanguagesModal();
+        });
+    }
+
+    if (achievementsModalTrigger) {
+        achievementsModalTrigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            openAchievementsModal();
+        });
+    }
+
     if (notificationButton) {
         notificationButton.addEventListener("click", function () {
             openNotificationsDrawer();
@@ -1445,6 +1837,24 @@
     skillsCloseButtons.forEach(function (button) {
         button.addEventListener("click", function () {
             closeSkillsModal();
+        });
+    });
+
+    languagesCloseButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            closeLanguagesModal();
+        });
+    });
+
+    summaryCloseButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            closeSummaryModal();
+        });
+    });
+
+    achievementsCloseButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            closeAchievementsModal();
         });
     });
 
@@ -1532,6 +1942,42 @@
         });
     }
 
+    if (languagesModalOverlay && languagesModal) {
+        languagesModalOverlay.addEventListener("click", function (event) {
+            if (event.target === languagesModalOverlay) {
+                closeLanguagesModal();
+            }
+        });
+
+        languagesModal.addEventListener("click", function (event) {
+            event.stopPropagation();
+        });
+    }
+
+    if (summaryModalOverlay && summaryModal) {
+        summaryModalOverlay.addEventListener("click", function (event) {
+            if (event.target === summaryModalOverlay) {
+                closeSummaryModal();
+            }
+        });
+
+        summaryModal.addEventListener("click", function (event) {
+            event.stopPropagation();
+        });
+    }
+
+    if (achievementsModalOverlay && achievementsModal) {
+        achievementsModalOverlay.addEventListener("click", function (event) {
+            if (event.target === achievementsModalOverlay) {
+                closeAchievementsModal();
+            }
+        });
+
+        achievementsModal.addEventListener("click", function (event) {
+            event.stopPropagation();
+        });
+    }
+
     if (profileDrawerOverlay && profileDrawer) {
         profileDrawerOverlay.addEventListener("click", function (event) {
             if (event.target === profileDrawerOverlay) {
@@ -1563,9 +2009,13 @@
             profileState = {
                 fullName: fullNameInput ? fullNameInput.value.trim() || "Nilayesh Adhikari" : "Nilayesh Adhikari",
                 gender: getCheckedRadioValue("gender"),
+                category: getCheckedRadioValue("category"),
                 dateOfBirth: dobInput ? dobInput.value.trim() : "",
-                currentLocation: currentLocationInput ? currentLocationInput.value.trim() : "",
-                hometown: hometownInput ? hometownInput.value.trim() : "",
+                street: streetInput ? streetInput.value.trim() : "",
+                city: cityInput ? cityInput.value.trim() : "",
+                state: stateInput ? stateInput.value.trim() : "",
+                country: countryInput ? countryInput.value.trim() : "",
+                pinCode: pinCodeInput ? pinCodeInput.value.trim() : "",
                 mobileNumber: mobileInput ? mobileInput.value.trim() : "",
                 residingInIndia: residingInIndiaInput ? residingInIndiaInput.checked : true
             };
@@ -1690,6 +2140,112 @@
             skillsState = skillsDraftState.slice();
             renderProfileSkills();
             closeSkillsModal();
+        });
+    }
+
+    if (languagesChipList) {
+        languagesChipList.addEventListener("click", function (event) {
+            var removeButton = event.target.closest(".tag-chip-remove");
+            var languageIndex;
+
+            if (!removeButton) {
+                return;
+            }
+
+            languageIndex = Number(removeButton.getAttribute("data-language-index"));
+
+            if (Number.isNaN(languageIndex)) {
+                return;
+            }
+
+            languagesDraftState.splice(languageIndex, 1);
+            renderLanguagesDraft();
+        });
+    }
+
+    if (summaryModalForm) {
+        summaryModalForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            summaryState = summaryInput ? summaryInput.value.trim() : "";
+            renderProfileSummary();
+            closeSummaryModal();
+        });
+    }
+
+    if (languagesInput) {
+        languagesInput.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== ",") {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (addLanguageToDraft(languagesInput.value)) {
+                languagesInput.value = "";
+            }
+        });
+    }
+
+    if (languagesModalForm) {
+        languagesModalForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (languagesInput && addLanguageToDraft(languagesInput.value)) {
+                languagesInput.value = "";
+            }
+
+            languagesState = languagesDraftState.slice();
+            renderProfileLanguages();
+            closeLanguagesModal();
+        });
+    }
+
+    if (achievementsChipList) {
+        achievementsChipList.addEventListener("click", function (event) {
+            var removeButton = event.target.closest(".tag-chip-remove");
+            var achievementIndex;
+
+            if (!removeButton) {
+                return;
+            }
+
+            achievementIndex = Number(removeButton.getAttribute("data-achievement-index"));
+
+            if (Number.isNaN(achievementIndex)) {
+                return;
+            }
+
+            achievementsDraftState.splice(achievementIndex, 1);
+            renderAchievementsDraft();
+        });
+    }
+
+    if (achievementsInput) {
+        achievementsInput.addEventListener("keydown", function (event) {
+            if (event.key !== "Enter" && event.key !== ",") {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (addAchievementToDraft(achievementsInput.value)) {
+                achievementsInput.value = "";
+            }
+        });
+    }
+
+    if (achievementsModalForm) {
+        achievementsModalForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (achievementsInput && addAchievementToDraft(achievementsInput.value)) {
+                achievementsInput.value = "";
+            }
+
+            achievementsState = achievementsDraftState.slice();
+            renderProfileAchievements();
+            closeAchievementsModal();
         });
     }
 
@@ -1832,7 +2388,10 @@
     applyProjectsState();
     updateProfileCompletionRing(progressBadge ? parseInt(progressBadge.textContent, 10) : 0);
     setProfilePhoto(getStoredProfilePhoto());
+    renderProfileSummary();
     renderProfileSkills();
+    renderProfileAchievements();
+    renderProfileLanguages();
     renderResume();
     updateSkillsPlaceholder();
     updateActiveQuickLink();

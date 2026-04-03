@@ -96,10 +96,14 @@
             <div class="progress-panel">
                 <div class="progress-ring" role="img" aria-label="Profile completion 40 percent">
                     <svg class="progress-ring-svg" viewBox="0 0 120 120" aria-hidden="true">
-                        <circle class="progress-ring-track" cx="60" cy="60" r="54" pathLength="100" transform="rotate(90 60 60)"></circle>
-                        <circle class="progress-ring-fill" cx="60" cy="60" r="54" pathLength="100" transform="rotate(90 60 60)"></circle>
+                        <circle class="progress-ring-track" cx="60" cy="60" r="54" pathLength="100"
+                            transform="rotate(90 60 60)"></circle>
+                        <circle class="progress-ring-fill" cx="60" cy="60" r="54" pathLength="100"
+                            transform="rotate(90 60 60)"></circle>
                     </svg>
-                    <button class="avatar-trigger" id="profilePhotoTrigger" type="button" aria-label="Change profile photo" aria-haspopup="dialog" aria-controls="photoModalOverlay" title="Change photo">
+                    <button class="avatar-trigger" id="profilePhotoTrigger" type="button"
+                        aria-label="Change profile photo" aria-haspopup="dialog" aria-controls="photoModalOverlay"
+                        title="Change photo">
                         <div class="avatar-shell" id="profileAvatar" aria-hidden="true"></div>
                         <span class="avatar-edit-badge" aria-hidden="true">
                             <svg viewBox="0 0 24 24">
@@ -201,10 +205,14 @@
                             <h3>Quick links</h3>
                         </div>
                         <ul class="quick-list quick-list--single">
-                            <li><a class="quick-nav-link active" href="#personal-details" aria-current="true">Personal
+                            <li><a class="quick-nav-link active" href="#profile-summary-section"
+                                    aria-current="true">Profile summary</a></li>
+                            <li><a class="quick-nav-link" href="#personal-details">Personal
                                     details</a></li>
                             <li><a class="quick-nav-link" href="#address">Address</a></li>
+                            <li><a class="quick-nav-link" href="#languages">Languages</a></li>
                             <li><a class="quick-nav-link" href="#education">Educations</a></li>
+                            <li><a class="quick-nav-link" href="#academic-achievements">Academic achievements</a></li>
                             <li><a class="quick-nav-link" href="#skills-section">Skills</a></li>
                             <li><a class="quick-nav-link" href="#experience-section">Experience</a></li>
                             <li><a class="quick-nav-link" href="#projects-section">Projects</a></li>
@@ -213,6 +221,16 @@
                     </aside>
 
                     <div class="content-stack">
+                        <section class="info-card content-card" id="profile-summary-section"
+                            aria-labelledby="profileSummaryHeading">
+                            <div class="card-head">
+                                <h3 id="profileSummaryHeading">Profile Summary</h3>
+                                <a class="text-link" id="summaryModalTrigger" href="#" aria-haspopup="dialog"
+                                    aria-controls="summaryModalOverlay">Edit</a>
+                            </div>
+                            <p class="summary-copy" id="profileSummaryText">i am Java developer</p>
+                        </section>
+
                         <section class="info-card content-card" id="personal-details"
                             aria-labelledby="personalDetailsHeading">
                             <div class="card-head">
@@ -241,6 +259,10 @@
                                     <dt>Date of birth</dt>
                                     <dd id="profileDobValue" class="empty-value">Not added</dd>
                                 </div>
+                                <div class="data-pair">
+                                    <dt>Category</dt>
+                                    <dd id="profileCategoryValue">Fresher</dd>
+                                </div>
                             </dl>
                         </section>
 
@@ -252,26 +274,35 @@
                             </div>
                             <dl class="profile-data-grid">
                                 <div class="data-pair">
-                                    <dt>Current location</dt>
-                                    <dd id="profileCurrentLocationValue">Kolkata</dd>
+                                    <dt>Street</dt>
+                                    <dd id="profileStreetValue" class="empty-value">Not added</dd>
                                 </div>
                                 <div class="data-pair">
-                                    <dt>Hometown</dt>
-                                    <dd id="profileHometownValue" class="empty-value">Not added</dd>
+                                    <dt>City</dt>
+                                    <dd id="profileCityValue">Kolkata</dd>
                                 </div>
                                 <div class="data-pair">
                                     <dt>State</dt>
-                                    <dd>West Bengal</dd>
+                                    <dd id="profileStateValue">West Bengal</dd>
                                 </div>
                                 <div class="data-pair">
                                     <dt>Country</dt>
-                                    <dd>India</dd>
+                                    <dd id="profileCountryValue">India</dd>
                                 </div>
                                 <div class="data-pair">
                                     <dt>Pin code</dt>
-                                    <dd>700091</dd>
+                                    <dd id="profilePinCodeValue">700091</dd>
                                 </div>
                             </dl>
+                        </section>
+
+                        <section class="info-card content-card" id="languages" aria-labelledby="languagesHeading">
+                            <div class="card-head">
+                                <h3 id="languagesHeading">Languages</h3>
+                                <a class="text-link" id="languagesModalTrigger" href="#" aria-haspopup="dialog"
+                                    aria-controls="languagesModalOverlay">Edit</a>
+                            </div>
+                            <div class="lang-list" id="languagesList" aria-live="polite"></div>
                         </section>
 
                         <section class="info-card content-card" id="education" aria-labelledby="educationHeading">
@@ -298,6 +329,16 @@
                                     <p class="record-year">Passing year: 2024</p>
                                 </article>
                             </div>
+                        </section>
+
+                        <section class="info-card content-card" id="academic-achievements"
+                            aria-labelledby="academicAchievementsHeading">
+                            <div class="card-head">
+                                <h3 id="academicAchievementsHeading">Academic achievements</h3>
+                                <a class="text-link" id="achievementsModalTrigger" href="#" aria-haspopup="dialog"
+                                    aria-controls="achievementsModalOverlay">Edit</a>
+                            </div>
+                            <div class="achievement-list" id="academicAchievementsList" aria-live="polite"></div>
                         </section>
 
                         <section class="info-card content-card" id="skills-section" aria-labelledby="skillsHeading">
@@ -465,7 +506,8 @@
     </footer>
 
     <div class="photo-overlay" id="photoModalOverlay" hidden>
-        <section class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle" aria-describedby="photoModalSubtitle">
+        <section class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"
+            aria-describedby="photoModalSubtitle">
             <div class="photo-modal-header">
                 <button class="photo-modal-close" type="button" aria-label="Close photo upload modal" data-photo-close>
                     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -474,7 +516,8 @@
                     </svg>
                 </button>
                 <h2 class="photo-modal-title" id="photoModalTitle">Upload a recent photo</h2>
-                <p class="photo-modal-subtitle" id="photoModalSubtitle">Photo enhances memorability, and helps you demonstrate professionalism</p>
+                <p class="photo-modal-subtitle" id="photoModalSubtitle">Photo enhances memorability, and helps you
+                    demonstrate professionalism</p>
             </div>
 
             <div class="photo-preview">
@@ -487,7 +530,8 @@
             </div>
 
             <p class="photo-note">Supported file format: png, jpg, jpeg, gif - up to 2MB</p>
-            <input type="file" id="profilePhotoInput" hidden accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif">
+            <input type="file" id="profilePhotoInput" hidden
+                accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif">
         </section>
     </div>
 
@@ -1038,6 +1082,93 @@
         </section>
     </div>
 
+    <div class="modal-overlay" id="languagesModalOverlay" hidden>
+        <section class="profile-modal languages-modal" role="dialog" aria-modal="true"
+            aria-labelledby="languagesModalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="languagesModalTitle">Update Languages</h2>
+                <button class="modal-close" type="button" aria-label="Close languages modal" data-languages-close>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6 18 18"></path>
+                        <path d="M18 6 6 18"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form class="modal-form" id="languagesModalForm">
+                <div class="form-group">
+                    <label class="form-label" for="languagesInput">Languages (Press Enter to add)</label>
+                    <div class="tag-input-container" id="languagesTagContainer">
+                        <div class="tag-chip-list" id="languagesChipList" aria-live="polite"></div>
+                        <input type="text" id="languagesInput" name="languagesInput" autocomplete="off"
+                            placeholder="Type a language">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" data-languages-close>Cancel</button>
+                    <button type="submit" class="btn-save">Save</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="modal-overlay" id="summaryModalOverlay" hidden>
+        <section class="profile-modal summary-modal" role="dialog" aria-modal="true"
+            aria-labelledby="summaryModalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="summaryModalTitle">Update Summary</h2>
+                <button class="modal-close" type="button" aria-label="Close summary modal" data-summary-close>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6 18 18"></path>
+                        <path d="M18 6 6 18"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form class="modal-form" id="summaryModalForm">
+                <div class="form-group">
+                    <label class="form-label" for="summaryInput">Professional Summary</label>
+                    <textarea class="textarea-input summary-textarea" id="summaryInput" name="summaryInput"
+                        rows="5"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" data-summary-close>Cancel</button>
+                    <button type="submit" class="btn-save">Save</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div class="modal-overlay" id="achievementsModalOverlay" hidden>
+        <section class="profile-modal achievements-modal" role="dialog" aria-modal="true"
+            aria-labelledby="achievementsModalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="achievementsModalTitle">Update Achievements</h2>
+                <button class="modal-close" type="button" aria-label="Close achievements modal" data-achievements-close>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 6 18 18"></path>
+                        <path d="M18 6 6 18"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form class="modal-form" id="achievementsModalForm">
+                <div class="form-group">
+                    <label class="form-label" for="achievementsInput">Achievements (Press Enter to add)</label>
+                    <div class="tag-input-container">
+                        <div class="tag-chip-list" id="achievementsChipList" aria-live="polite"></div>
+                        <input type="text" id="achievementsInput" name="achievementsInput" autocomplete="off"
+                            placeholder="Type an achievement">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" data-achievements-close>Cancel</button>
+                    <button type="submit" class="btn-save">Save</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
     <div class="modal-overlay" id="profileModalOverlay" hidden>
         <section class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
             <div class="modal-header">
@@ -1080,44 +1211,61 @@
                     <input class="text-input" type="text" id="birthDate" name="birthDate" placeholder="DD/MM/YYYY"
                         maxlength="10" inputmode="numeric" autocomplete="off" class="fn-inp-md reachable">
                 </div>
-                <div class="form-group">
-                    <label class="form-label" for="StateInput">State</label>
-                    <input class="text-input" id="StateInput" name="State" type="text" value=""
-                        placeholder="Enter your current State" autocomplete="address-level1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="currentLocationInput">Current location</label>
-                    <input class="text-input" id="currentLocationInput" name="currentLocation" type="text"
-                        value="Kolkata" autocomplete="address-level2">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="hometownInput">Hometown</label>
-                    <input class="text-input" id="hometownInput" name="hometown" type="text" value=""
-                        placeholder="Enter your current hometown" autocomplete="address-level2">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="CountryInput">Country</label>
-                    <input class="text-input" id="CountryInput" name="Country" type="text" value=""
-                        placeholder="Enter your current Country" autocomplete="country-name">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="Pin CodeInput">Pin Code</label>
-                    <input class="text-input" id="Pin CodeInput" name="Pin Code" type="text" value=""
-                        placeholder="Enter your current Pin Code" autocomplete="postal-code" inputmode="numeric">
-                </div>
-
+                
                 <div class="form-group">
                     <label class="form-label" for="mobileInput">Mobile number</label>
                     <input class="text-input" id="mobileInput" name="mobileNumber" type="text" value="+91 1234567890"
                         inputmode="tel" autocomplete="tel">
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="Email">Mobile number</label>
+                    <label class="form-label" for="Email">Email</label>
                     <input class="text-input" id="Email" name="mobileNumber" type="email" value="abc@gmail.com"
                         inputmode="email" autocomplete="email">
+                </div>
+
+                <fieldset class="form-group">
+                    <legend class="form-label">Category</legend>
+                    <div class="chip-group" role="radiogroup" aria-label="Category">
+                        <label class="chip">
+                            <input type="radio" name="category" value="Fresher" checked>
+                            <span>Fresher</span>
+                        </label>
+                        <label class="chip">
+                            <input type="radio" name="category" value="Experienced">
+                            <span>Experienced</span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <label class="form-label" for="StateInput">State</label>
+                    <input class="text-input" id="StateInput" name="state" type="text" value="West Bengal"
+                        placeholder="Enter your state" autocomplete="address-level1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cityInput">City</label>
+                    <input class="text-input" id="cityInput" name="city" type="text" value="Kolkata"
+                        placeholder="Enter your city" autocomplete="address-level2">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="streetInput">Street</label>
+                    <input class="text-input" id="streetInput" name="street" type="text" value=""
+                        placeholder="Enter your street address" autocomplete="street-address">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pinCodeInput">Pin Code</label>
+                    <input class="text-input" id="pinCodeInput" name="pinCode" type="text" value="700091"
+                        placeholder="Enter your pin code" autocomplete="postal-code" inputmode="numeric">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="CountryInput">Country</label>
+                    <input class="text-input" id="CountryInput" name="country" type="text" value="India"
+                        placeholder="Enter your country" autocomplete="country-name">
                 </div>
 
                 <div class="modal-actions">

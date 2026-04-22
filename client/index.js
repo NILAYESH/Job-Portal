@@ -1,12 +1,9 @@
-// --- CONSTANTS ---
 import { API_BASE_URL } from "./constants/constant.js";
 
-// --- ICONS (SVG Strings) ---
+//icons
 const icons = {
     location: '<svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>',
-    salary: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16">
-  <path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z"/>
-</svg>`,
+    salary: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-currency-rupee" viewBox="0 0 16 16"><path d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4z"/></svg>`,
     briefcase: '<svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
     clock: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
     send: '<svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>',
@@ -14,10 +11,6 @@ const icons = {
     users: '<svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
     fileText: '<svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>'
 };
-
-// --- AUTH CHECK + USER DATA LOAD ---
-// Fetch current user and profile completion together on page load.
-// If not authenticated, redirect to login immediately.
 
 let currentUser = null;
 let profileCompletion = 0;
@@ -58,8 +51,8 @@ let profileCompletion = 0;
     }
 })();
 
-// --- CORE LOGIC ---
 
+//core logics
 function toggleJobAccordion(jobId) {
     const card = document.getElementById(`job-card-${jobId}`);
     card.classList.toggle('expanded');
@@ -138,7 +131,7 @@ function normalizeJob(job) {
         vacancies: job.vacancies || 0,
         createdAt: job.createdAt,
         ageRange: job.ageLimit
-            ? `${job.ageLimit.min}-${job.ageLimit.max}`
+            ? `18-${job.ageLimit} years`
             : (job.ageRange || "N/A"),
         qualifications: Array.isArray(job.qualifications)
             ? job.qualifications.map(q => q.degree || q).join(", ")
@@ -265,10 +258,7 @@ async function renderJobFeed() {
     }
 }
 
-// --- PROFILE SYNC ---
-// Reads from the real API data (currentUser + profileCompletion) and
-// updates both the left sidebar profile card and the profile drawer.
-
+//profile drawer
 function getProgressColor(percentage) {
     if (percentage > 75) return "#2abf68";
     if (percentage > 50) return "#eab308";
@@ -289,7 +279,7 @@ function syncProfileDrawer() {
 
     const imageUrl = currentUser.profilePicture?.url || "";
 
-    // --- Left sidebar profile card ---
+    //left side profile card
     const profileName = document.querySelector(".profile-card .profile-name");
     const profileTitle = document.querySelector(".profile-card .profile-title");
     const profilePic = document.querySelector(".profile-card .profile-pic");
@@ -308,14 +298,14 @@ function syncProfileDrawer() {
         profilePicContainer.style.setProperty("--profile-ring-color", color);
     }
 
-    // --- Header avatar ---
+    //header avatar
     const headerAvatar = document.getElementById("headerProfileAvatar");
     if (headerAvatar && imageUrl) {
         headerAvatar.style.backgroundImage = `url("${imageUrl}")`;
         headerAvatar.classList.add("has-photo");
     }
 
-    // --- Profile drawer ---
+    //drawer
     const drawerName = document.getElementById("drawerProfileName");
     const drawerSubtitle = document.getElementById("drawerProfileSubtitle");
     const drawerPercentage = document.getElementById("drawerPercentage");
@@ -344,8 +334,7 @@ function syncProfileDrawer() {
     if (performanceValues[1]) performanceValues[1].textContent = currentUser.recruiterActions || 0;
 }
 
-// --- DRAWERS ---
-
+//drawer open/close logic
 function hasOpenDrawer() {
     return Boolean(document.querySelector(".profile-overlay.open, .notifications-overlay.open"));
 }
@@ -429,8 +418,6 @@ function bindDrawerEvents() {
 function initializeHomePage() {
     renderJobFeed();
     bindDrawerEvents();
-    // syncProfileDrawer() is called after API resolves in the IIFE above,
-    // so no need to call it here again
 }
 
 // Expose functions used in inline onclick attributes to the global scope.

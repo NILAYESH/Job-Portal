@@ -117,11 +117,15 @@ const getAllJobsByAlgorithm = asyncHandler(async (req, res) => {
 
     const today = new Date();
 
+    const appliedJobs = await AppliedJob.find({ applicant: userId }).select("job");
+    const appliedJobIds = appliedJobs.map(a => a.job);
+
     const jobs = await Job.aggregate([
         {
             $match: {
                 createdAt: { $gte: thirtyDaysAgo },
-                applicationDeadline: { $gte: today }
+                applicationDeadline: { $gte: today },
+                _id: { $nin: appliedJobIds }
             }
         },
         {
@@ -163,7 +167,7 @@ const getAllJobsByAlgorithm = asyncHandler(async (req, res) => {
         );
     }
 
-    //for new user
+    //new user
     const isNewUser =
         !user.skills?.length &&
         !user.qualifications?.length &&
